@@ -19,7 +19,12 @@ public class Client implements Runnable{
 		socket.joinGroup(group, netIf);
 
 		while(true){ 
-
+			try {
+				Thread.sleep(250);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			System.out.println("[" +threadName+ "][WOKE]");
 			DatagramPacket packet=new DatagramPacket(buffer,buffer.length);
 			socket.receive(packet);
@@ -28,18 +33,6 @@ public class Client implements Runnable{
 			System.out.println("[" +threadName+ "][RECV] >> "+msg);
 			if("ENDCOMS".equals(msg) || msgSplitted.length < 2) {
 				break;
-			}
-			if("REQUEST".equals(msgSplitted[0])) {
-				System.out.println("[" +threadName+ "][SEND] >> ACCEPT");
-				ProposalID propID = new ProposalID(Integer.parseInt(msgSplitted[1]));
-				
-				/*
-				 *  
-				 *  Accept logic
-				 *  
-				 */
-				
-				messenger.sendAccept(propID, msgSplitted[1]);
 			}
 			if("RESOLUTION".equals(msgSplitted[0])) {
 				System.out.println("[" +threadName+ "][DEAD]");

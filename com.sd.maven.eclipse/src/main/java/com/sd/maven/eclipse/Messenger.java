@@ -28,30 +28,31 @@ public class Messenger {
         return messagerInstance;
 	}
 	
-	public void sendRequest(Object Value) throws IOException {
-		byte[] msg = ("REQUEST,"+Value.toString()).getBytes();
+	public void sendRequest(String forUID, Object Value) throws IOException {
+		byte[] msg = ("REQUEST,"+forUID+","+Value.toString()).getBytes();
 		sendMulticastMessage(msg,ipAddressProposerGroup);
 	}
 	
 	public void sendPrepare(ProposalID proposalID) throws IOException {
-		byte[] msg = ("PREPARE,"+proposalID.getNumber()).getBytes();
+		byte[] msg = ("PREPARE,"+proposalID.getUID()+","+proposalID.getNumber()).getBytes();
 		sendMulticastMessage(msg,ipAddressAcceptorGroup);
 	}
 
-	public void sendPromise(ProposalID proposalID, ProposalID previousID, Object previousAcceptedValue, String ipAddressProposer) throws IOException {
-		int prevIDNumber = ((previousID == null) ? 0 : previousID.getNumber());
+	public void sendPromise(String proposerUID, String accepterUID, ProposalID proposalID, ProposalID previousID, Object previousAcceptedValue) throws IOException {
+		int prevIDNumber = ((previousID == null) ? -1 : previousID.getNumber());
+		String prevIDUID = ((previousID == null) ? "-1" : previousID.getUID());
 		String prevAcceptedValue = ((previousAcceptedValue == null) ? "null" : previousAcceptedValue.toString());
-		byte[] msg = ("PROMISE,"+proposalID.getNumber()+","+prevIDNumber+","+prevAcceptedValue).getBytes();
-		sendMulticastMessage(msg,ipAddressProposerGroup);
+		byte[] msg = ("PROMISE,"+proposerUID+","+accepterUID+","+proposalID.getUID()+","+proposalID.getNumber()+","+prevIDUID+","+prevIDNumber+","+prevAcceptedValue).getBytes();
+		sendMulticastMessage(msg,ipAddressProposerGroup); // proposer unique
 	}
 	
 	public void sendAccept(ProposalID proposalID, Object proposalValue) throws IOException {
-		byte[] msg = ("ACCEPT,"+proposalID.getNumber()+","+proposalValue.toString()).getBytes();
+		byte[] msg = ("ACCEPT,"+proposalID.getUID()+","+proposalID.getNumber()+","+proposalValue.toString()).getBytes();
 		sendMulticastMessage(msg,ipAddressAcceptorGroup);
 	}
 
-	public void sendAccepted(ProposalID proposalID, Object acceptedValue) throws IOException {
-		byte[] msg = ("ACCEPTED,"+proposalID.getNumber()+","+acceptedValue.toString()).getBytes();
+	public void sendAccepted(String fromUID, ProposalID proposalID, Object acceptedValue) throws IOException {
+		byte[] msg = ("ACCEPTED,"+fromUID+","+proposalID.getUID()+","+proposalID.getNumber()+","+acceptedValue.toString()).getBytes();
 		sendMulticastMessage(msg,ipAddressLearnerGroup);
 		sendMulticastMessage(msg,ipAddressProposerGroup);
 	}
