@@ -36,8 +36,8 @@ public class LearnerLogic{
 
 	public void receiveAccepted(String fromUID, ProposalID proposalID, Object acceptedValue) throws IOException {
 		
-		if (isComplete())
-			return;
+		//if (isComplete())
+			//return;
 
 		ProposalID oldPID = acceptors.get(fromUID);
 		
@@ -69,6 +69,8 @@ public class LearnerLogic{
         	
         	System.out.println("[" +fromUID+ "][SEND] >> RESOLUTION");
         	messenger.onResolution(proposalID, acceptedValue);
+        	finalProposalID = null;
+        	finalValue = null;
         }
 	}
 

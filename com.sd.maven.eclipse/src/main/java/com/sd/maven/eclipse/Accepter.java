@@ -40,7 +40,7 @@ public class Accepter extends AcceptorLogic implements Runnable{
 			}
 			
 			System.out.println("[" +threadName+ "][RECV] << "+msg);
-			Thread.sleep(500);
+			//Thread.sleep(500);
 			processMessageReceived(msg);
 		}
 		socket.leaveGroup(group, netIf);
@@ -53,7 +53,6 @@ public class Accepter extends AcceptorLogic implements Runnable{
 		if("PREPARE".equals(msgSplitted[0])) {
 			ProposalID recvPropID = new ProposalID(Integer.parseInt(msgSplitted[2]), msgSplitted[1]);
 			
-			System.out.println("[" +thisUID+ "][SEND] >> PROMISE");
 			receivePrepare(msgSplitted[1], recvPropID);
 			
 		}
@@ -61,6 +60,11 @@ public class Accepter extends AcceptorLogic implements Runnable{
 			ProposalID recvPropID = new ProposalID(Integer.parseInt(msgSplitted[2]),msgSplitted[1]);
 			
 			receiveAcceptRequest(recvPropID, msgSplitted[3]);
+		}
+		if("RESOLUTION".equals(msgSplitted[0])) {
+			acceptedID = null;
+			acceptedValue = null;
+			updateDataFile();
 		}
 	}
 	

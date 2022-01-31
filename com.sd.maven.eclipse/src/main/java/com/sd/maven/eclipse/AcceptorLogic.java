@@ -18,13 +18,18 @@ public class AcceptorLogic{
     }
 
 	public void receivePrepare(String proposerUID, ProposalID proposalID) throws IOException {
-		
 		if (this.promisedID != null && proposalID.equals(promisedID)) { // duplicate message
-			messenger.sendPromise(proposerUID, thisUID, proposalID, acceptedID, acceptedValue);
+			System.out.println("[" +thisUID+ "][SEND] >> PROMISE");
+			messenger.sendPromise(proposerUID, thisUID, promisedID, acceptedID, acceptedValue);
 		}
 		else if (this.promisedID == null || proposalID.isGreaterThan(promisedID)) {
 			promisedID = proposalID;
-			messenger.sendPromise(proposerUID, thisUID, proposalID, acceptedID, acceptedValue);
+			System.out.println("[" +thisUID+ "][SEND] >> PROMISE");
+			messenger.sendPromise(proposerUID, thisUID, promisedID, acceptedID, acceptedValue);
+		}
+		else{
+			System.out.println("[" +thisUID+ "][SEND] >> NEGPROMISE");
+			messenger.sendNegPromise(proposerUID, thisUID, promisedID, acceptedID, acceptedValue);
 		}
 	}
 

@@ -39,7 +39,7 @@ public class Learner extends LearnerLogic implements Runnable{
 			}
 			
 			System.out.println("[" +threadName+ "][RECV] << "+msg);
-			Thread.sleep(500);
+			//Thread.sleep(500);
 			processMessageReceived(msg);
 		}
 		socket.leaveGroup(group, netIf);
